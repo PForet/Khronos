@@ -65,8 +65,11 @@ def fixed_period_timeline(ref_date, period, size):
         return lst_date
     
 def delta_to_years(tdelta):
-    """Approximate à timedelta object by a float representing the number of years"""
-    return tdelta.total_seconds()/3600.0/24.0/365.25
+    """Approximate a timedelta object by a float representing the number of years"""
+    seconds = (
+        tdelta.microseconds + 0.0 +
+        (tdelta.seconds + tdelta.days * 24 * 3600) * 10 ** 6) / 10 ** 6
+    return seconds/3600.0/24.0/365.25
 
 def generate_timeline(N, start_date=None, end_date=None, by=None):
     """Generate a datetime objects list (timeline) according to the arguments.
