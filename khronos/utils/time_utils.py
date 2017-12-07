@@ -64,6 +64,13 @@ def fixed_period_timeline(ref_date, period, size):
     else:
         return lst_date
     
+def delta_to_years(tdelta):
+    """Approximate a timedelta object by a float representing the number of years"""
+    seconds = (
+        tdelta.microseconds + 0.0 +
+        (tdelta.seconds + tdelta.days * 24 * 3600) * 10 ** 6) / 10 ** 6
+    return seconds/3600.0/24.0/365.25
+
 def generate_timeline(N, start_date=None, end_date=None, by=None):
     """Generate a datetime objects list (timeline) according to the arguments.
     A first and last date of sampling can be given (with `start_date`
@@ -88,6 +95,6 @@ def generate_timeline(N, start_date=None, end_date=None, by=None):
         timeline = evenly_spaced_timeline(start_date, end_date, N)
     else:
         raise ValueError("Should provide two of the following: 'start_date', 'end_date', 'by'")
-    delta_t = (timeline[1] - timeline[0]).days/365.25
+    delta_t = delta_to_years(timeline[1] - timeline[0])
     return timeline, delta_t
 
