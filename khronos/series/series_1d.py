@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from ..utils.catch import catch_array
-from ..utils.time_utils import evenly_spaced_timeline, fixed_period_timeline
+from ..utils.time_utils import generate_timeline
 
 class series_1d:
     """Data structure for evenly spaced one dimentional time series
@@ -32,20 +32,18 @@ class series_1d:
         
         if timeline is not None:
             #If a `timeline` was passed, we must sort the values in case `timeline` was not ordered
-            if len(timeline)!=len(values): # Raise error if length are not consistent
+            if len(timeline)!=len(values): # Raise error if lengths are not consistent
                 raise ValueError("Values and timeline should be of the same length")
             #Sort the values and unzip (convert to list to pass futur tests)
             a, b = zip(*sorted(zip(timeline, self.values)))
             self.timeline, self.values = list(a), catch_array(list(b))
-        elif start_date is not None and by is not None:
-            self.timeline = fixed_period_timeline(start_date, by, self.N)
-        elif end_date is not None and by is not None:
-            # If we pass the last date, we need to put a minus before by (string of number)
-            self.timeline = fixed_period_timeline(end_date,("-"+by if isinstance(by,str) else -by),self.N)
-        elif start_date is not None and end_date is not None:
-            self.timeline = evenly_spaced_timeline(start_date, end_date, self.N)
+        
+        elif any(e is not None for e in (start_date, end_date, by)):
+            self.timeline, _ = generate_timeline(self.N, start_date, end_date, by)
+            
         else: #We must assume the default configuration
             self.timeline = range(self.N)
+        
             
         
         

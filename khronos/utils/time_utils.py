@@ -64,4 +64,30 @@ def fixed_period_timeline(ref_date, period, size):
     else:
         return lst_date
     
+def generate_timeline(N, start_date=None, end_date=None, by=None):
+    """Generate a datetime objects list (timeline) according to the arguments.
+    A first and last date of sampling can be given (with `start_date`
+    and `end_date`), or a first or last date and a sampling periode (with `start_date` and `by`)
     
+    # Arguments:
+        values: Numpy Array, the values of the time serie.
+        timeline: Array or list, the dates of observation of the values, must be
+            the same length as `values`.
+        start_date: A date object, the date of the first observation.
+        end_date: A date object the date of the last observation.
+        by: a time_delta, the periode between each sampling.
+    
+    Return a timeline and and the sampling period (float, number of years)
+    """
+    if start_date is not None and by is not None:
+        timeline = fixed_period_timeline(start_date, by, N)
+    elif end_date is not None and by is not None:
+        # If we pass the last date, we need to put a minus before by (string of number)
+        timeline = fixed_period_timeline(end_date,("-"+by if isinstance(by,str) else -by), N)
+    elif start_date is not None and end_date is not None:
+        timeline = evenly_spaced_timeline(start_date, end_date, N)
+    else:
+        raise ValueError("Should provide two of the following: 'start_date', 'end_date', 'by'")
+    delta_t = (timeline[1] - timeline[0]).days/365.25
+    return timeline, delta_t
+

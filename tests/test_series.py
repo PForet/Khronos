@@ -23,6 +23,9 @@ def test_series_1d():
     with pytest.raises(ValueError):
         #Should fail as end_date is after start_date
         s = series_1d([1,2], start_date='01/01/2012', end_date='01/01/2000')
+    with pytest.raises(ValueError):
+        #Should fail as a start_date alone is not sufficient
+        s = series_1d([1,2,3], start_date='01/01/2012')
 
         
 if __name__ == '__main__':
