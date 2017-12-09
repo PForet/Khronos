@@ -12,7 +12,7 @@ before_install:
 install:
   - python setup.py install
 
-script: coverage run —-source=khronos -m pytest
+script: py.test --cov=khronos tests/
 
 after_success:
     - coveralls
