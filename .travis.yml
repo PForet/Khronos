@@ -1,12 +1,12 @@
 sudo: required
 language: python
 python:
-  - "2.6"
-  - "2.7"
-  - "3.3"
+  - 2.7
+  - 3.4
   
 before_install:
     - pip install pytest pytest-cov
+    - pip install matplotlib
     - pip install coveralls
 
 install:
